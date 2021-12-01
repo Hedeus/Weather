@@ -9,7 +9,7 @@ namespace Weather.Models.Decanat
 
         public string Surname { get; set; }
 
-        public String Patrunymic { get; set; }
+        public String Patronymic { get; set; }
 
         public DateTime Birthday { get; set; }
 

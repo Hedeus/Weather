@@ -3,11 +3,18 @@ using Weather.ViewModels.Base;
 using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
+using Weather.Models.Decanat;
+using System.Linq;
 
 namespace Weather.ViewModels
 {
     internal class MainWindowViewModel : ViewModel
     {
+        /*------------------------------------------------------------------------------------*/
+
+        public ObservableCollection<Group> Groups { get; }
+
         #region Заголовок окна
         private string _Title = "Курсовая работа по C#";
 
@@ -43,6 +50,8 @@ namespace Weather.ViewModels
 
         #endregion
 
+        /*------------------------------------------------------------------------------------*/
+
         #region Команды
 
         #region  CloseApplicationCommand
@@ -53,10 +62,12 @@ namespace Weather.ViewModels
         private void OnCloseApplicationCommandExecuted(object p)
         {
             Application.Current.Shutdown();
-        } 
+        }
         #endregion
 
         #endregion
+
+        /*------------------------------------------------------------------------------------*/
 
         public MainWindowViewModel()
         {
@@ -65,6 +76,25 @@ namespace Weather.ViewModels
             CloseApplicationCommand = new LambdaCommand(OnCloseApplicationCommandExecuted, CanCloseApplicationCommandExecute);
 
             #endregion
+
+            var student_index = 1;
+
+            var students = Enumerable.Range(1, 10).Select(i => new Student
+            {
+                Name = $"Name {student_index}",
+                Surname = $"Surname {student_index}",
+                Patronymic = $"PAtronymic {student_index++}",
+                Birthday = DateTime.Now,
+                Rating = 0
+            });
+
+            var groups = Enumerable.Range(1, 20).Select(i => new Group
+            {
+                Name = $"Группа { i }",
+                Students = new ObservableCollection<Student>(students)
+            });
+            Groups = new ObservableCollection<Group>(groups);
+
 
         }
     }
