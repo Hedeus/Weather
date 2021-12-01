@@ -15,6 +15,19 @@ namespace Weather.ViewModels
 
         public ObservableCollection<Group> Groups { get; }
 
+        #region SelectedGroup : Group - Выбранная группа
+
+        /// <summary>Выбранная группа
+
+        private Group _SelectedGroup;
+        /// </summary>Выбранная группа
+        public Group SelectedGroup 
+            { 
+                get => _SelectedGroup;
+                set => Set(ref _SelectedGroup, value);
+            }
+        #endregion
+
         #region Заголовок окна
         private string _Title = "Курсовая работа по C#";
 
