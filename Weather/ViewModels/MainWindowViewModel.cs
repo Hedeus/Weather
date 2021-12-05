@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Collections.ObjectModel;
 using Weather.Models.Decanat;
 using System.Linq;
+using Weather.Data;
 
 namespace Weather.ViewModels
 {
@@ -63,6 +64,18 @@ namespace Weather.ViewModels
 
         #endregion
 
+        #region Weather
+
+        private string _TextWeather = "Не відомо";
+
+        public string TextWeather
+        {
+            get => _TextWeather;
+            set => Set(ref _TextWeather, value);
+        }
+
+        #endregion
+
         /*------------------------------------------------------------------------------------*/
 
         #region Команды
@@ -108,6 +121,12 @@ namespace Weather.ViewModels
             });
             Groups = new ObservableCollection<Group>(groups);
 
+            WorkWithDataBase.OpenConnection("server=localhost;uid=root;pwd=1h9e8d7;database=weather;");
+            string response = WorkWithDataBase.ExecuteQuery("SELECT temperature FROM weather2021 WHERE date='2021-01-13';");
+            TextWeather = response;
+
+
+            WorkWithDataBase.CloseConnection();
 
         }
     }

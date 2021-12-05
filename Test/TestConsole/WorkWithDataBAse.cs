@@ -1,44 +1,44 @@
-﻿using MySql.Data.MySqlClient;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 
-namespace Weather.Data
+namespace TestConsole
 {
     static class WorkWithDataBase
     {
         public static string connectString;
-        static MySqlConnection myConnection;
-        //static string SQLServerName = "MySQL80";
-        static string SQLServerName = "localhost";
+        static SqlConnection myConnection;
+        static string SQLServerName = "MySQL80";
+        //static string SQLServerName = "localhost";
         static string dataBaseName = "weather";
 
 
         #region Перегруженные методы подключения к БД
-        
+
         public static void OpenConnection()
         {
             connectString = "Data Source=.\\" + SQLServerName + ";Initial Catalog=" + dataBaseName + ";Integrated Security=true;";
-            myConnection = new MySqlConnection(connectString);
+            myConnection = new SqlConnection(connectString);
             myConnection.Open();
         }
 
         public static void OpenConnection(string login, string password)
         {
             connectString = "Data Source=.\\" + SQLServerName + ";Initial Catalog=" + dataBaseName + ";User ID=" + login + ";Password=" + password + ";";
-            myConnection = new MySqlConnection(connectString);
+            myConnection = new SqlConnection(connectString);
             myConnection.Open();
         }
-                
+
         public static void OpenConnection(string SQLServerName, string dataBaseName, string login, string password)
         {
             connectString = "Data Source=.\\" + SQLServerName + ";Initial Catalog=" + dataBaseName + ";Integrated Security=true;";
-            myConnection = new MySqlConnection(connectString);
+            myConnection = new SqlConnection(connectString);
             myConnection.Open();
         }
 
         public static void OpenConnection(string userConnectionString)
         {
             connectString = userConnectionString;
-            myConnection = new MySqlConnection(connectString);
+            myConnection = new SqlConnection(connectString);
             myConnection.Open();
         }
 
@@ -50,13 +50,13 @@ namespace Weather.Data
 
         public static List<string[]> ExecuteQuery(string query, int col)
         {
-            MySqlCommand command = new MySqlCommand(query, myConnection);
+            SqlCommand command = new SqlCommand(query, myConnection);
 
-            MySqlDataReader reader = command.ExecuteReader();
+            SqlDataReader reader = command.ExecuteReader();
 
             List<string[]> response = new List<string[]>();
 
-            while(reader.Read())
+            while (reader.Read())
             {
                 response.Add(new string[col]);
 
@@ -73,13 +73,13 @@ namespace Weather.Data
 
         public static string ExecuteQuery(string query)
         {
-            MySqlCommand command = new MySqlCommand(query, myConnection);
+            SqlCommand command = new SqlCommand(query, myConnection);
 
-            MySqlDataReader reader = command.ExecuteReader();
+            SqlDataReader reader = command.ExecuteReader();
 
             string response = null;
 
-            while(reader.Read())
+            while (reader.Read())
             {
                 response = reader[0].ToString();
             }
@@ -93,7 +93,7 @@ namespace Weather.Data
 
         public static void ExecuteQueryWithoutResponse(string query)
         {
-            MySqlCommand command = new MySqlCommand(query, myConnection);
+            SqlCommand command = new SqlCommand(query, myConnection);
 
             command.ExecuteNonQuery();
         }

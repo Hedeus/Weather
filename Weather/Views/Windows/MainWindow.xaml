@@ -43,6 +43,9 @@
             </StatusBarItem>
         </StatusBar>
         <TabControl>
+            <TabItem Header="Вкладка 2">
+                <TextBlock Text="{Binding TextWeather}"/>
+            </TabItem>
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -101,8 +104,7 @@
                         </DataGrid>
                     </GroupBox>
                 </Grid>
-            </TabItem>
-            <TabItem Header="Вкладка 2"></TabItem>
+            </TabItem>            
         </TabControl>
     </DockPanel>
 </Window>
