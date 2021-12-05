@@ -44,7 +44,22 @@
         </StatusBar>
         <TabControl>
             <TabItem Header="Вкладка 2">
-                <TextBlock Text="{Binding TextWeather}"/>
+                <GroupBox Header="Погода 2021">
+                    <DataGrid ItemsSource="{Binding Table}"   
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              GridLinesVisibility="Vertical"
+                              VerticalGridLinesBrush="DarkGray"
+                              AlternatingRowBackground="LightGray">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Місяць" Binding="{Binding Місяць}"  Width="50"/>
+                            <DataGridTextColumn Header="День" Binding="{Binding День}" Width="50"/>                            
+                            <DataGridTextColumn Header="Температура" Binding="{Binding Температура}"  Width="90"/>
+                            <DataGridTextColumn Header="Тиск" Binding="{Binding Тиск}"  Width="50"/>
+                            <DataGridTextColumn Header="Опади" Binding="{Binding Опади}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
             </TabItem>
             <TabItem>
                 <TabItem.Header>

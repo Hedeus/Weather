@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using Weather.Models.Decanat;
 using System.Linq;
 using Weather.Data;
+using System.Data;
 
 namespace Weather.ViewModels
 {
@@ -74,6 +75,14 @@ namespace Weather.ViewModels
             set => Set(ref _TextWeather, value);
         }
 
+        private DataTable _Table;
+
+        public DataTable Table
+        {
+            get => _Table;
+            set => Set(ref _Table, value);
+        }
+
         #endregion
 
         /*------------------------------------------------------------------------------------*/
@@ -122,8 +131,17 @@ namespace Weather.ViewModels
             Groups = new ObservableCollection<Group>(groups);
 
             WorkWithDataBase.OpenConnection("server=localhost;uid=root;pwd=1h9e8d7;database=weather;");
-            string response = WorkWithDataBase.ExecuteQuery("SELECT temperature FROM weather2021 WHERE date='2021-01-13';");
-            TextWeather = response;
+            // string response = WorkWithDataBase.ExecuteQuery("SELECT temperature FROM weather2021 WHERE date='2021-01-13';");
+            //TextWeather = response;
+            //string sql = "SELECT temperature FROM weather2021 WHERE date='2021-01-13';";
+            //string sql = "SELECT * FROM weather2021;";            
+            string sql = "SELECT day(t.date) as `День`," +
+                         "month(t.date) as `Місяць`," +
+                         "temperature as `Температура`," +
+                         "pressure as `Тиск`," +
+                         "precipitation as `Опади`" +
+                         "from weather2021 t;";
+            Table = WorkWithDataBase.ExecuteQuery(sql);
 
 
             WorkWithDataBase.CloseConnection();

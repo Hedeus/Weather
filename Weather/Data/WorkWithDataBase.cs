@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Weather.Data
 {
@@ -48,44 +49,59 @@ namespace Weather.Data
 
         #region Перегруженные методы SELECT
 
-        public static List<string[]> ExecuteQuery(string query, int col)
+        public static DataTable ExecuteQuery(string query)
         {
             MySqlCommand command = new MySqlCommand(query, myConnection);
+            DataTable table = new DataTable();
+            MySqlDataAdapter adapter = new MySqlDataAdapter();
 
-            MySqlDataReader reader = command.ExecuteReader();
+            adapter.SelectCommand = command;
+            adapter.Fill(table);
 
-            List<string[]> response = new List<string[]>();
-
-            while(reader.Read())
-            {
-                response.Add(new string[col]);
-
-                for (int i = 0; i < col; i++)
-                    response[response.Count - 1][i] = reader[i].ToString();
-            }
-
-            reader.Close();
-            if (response.Count != 0)
-                return response;
+            if (table.Rows.Count > 0)
+                return table;
             else
                 return null;
         }
 
-        public static string ExecuteQuery(string query)
-        {
-            MySqlCommand command = new MySqlCommand(query, myConnection);
+        //public static List<string[]> ExecuteQuery(string query, int col)
+        //{
+        //    MySqlCommand command = new MySqlCommand(query, myConnection);
 
-            MySqlDataReader reader = command.ExecuteReader();
+        //    MySqlDataReader reader = command.ExecuteReader();
 
-            string response = null;
+        //    List<string[]> response = new List<string[]>();
 
-            while(reader.Read())
-            {
-                response = reader[0].ToString();
-            }
-            reader.Close();
-            return response;
-        }
+        //    while(reader.Read())
+        //    {
+        //        response.Add(new string[col]);
+
+        //        for (int i = 0; i < col; i++)
+        //            response[response.Count - 1][i] = reader[i].ToString();
+        //    }
+
+        //    reader.Close();
+        //    if (response.Count != 0)
+        //        return response;
+        //    else
+        //        return null;
+        //}
+
+        //public static string ExecuteQuery(string query)
+        //{
+        //    MySqlCommand command = new MySqlCommand(query, myConnection);
+
+        //    MySqlDataReader reader = command.ExecuteReader();
+
+        //    string response = null;
+
+        //    while(reader.Read())
+        //    {
+        //        response = reader[0].ToString();
+        //    }
+        //    reader.Close();
+        //    return response;
+        //}
 
         #endregion
 

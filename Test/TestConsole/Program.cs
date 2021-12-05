@@ -8,30 +8,7 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            //WorkWithDataBase.OpenConnection("root", "1h9e8d7");
-            //string connstring = "server=localhost;uid=root;pwd=1h9e8d7;database=weather;";
-
-            //MySqlConnection conn = new MySqlConnection(connstring); ;
-
-            //MySqlConnection conn = new MySqlConnection(connstring);
-            //try
-            //{
-            //    //WorkWithDataBase.OpenConnection(connstring);
-            //    //conn.Open();
-            //}
-            //catch (MySqlException ex)
-            //{
-            //    switch (ex.Number)
-            //    {
-            //        case 0:
-            //            Console.WriteLine("Cannot connect to server.  Contact administrator");
-            //            break;
-            //        case 1045:
-            //            Console.WriteLine("Invalid username/password, please try again");
-            //            break;
-            //    }
-            //    // Console.WriteLine(ex.Source);
-            //}
+            
 
             DB db = new DB();
             DataTable table = new DataTable();
