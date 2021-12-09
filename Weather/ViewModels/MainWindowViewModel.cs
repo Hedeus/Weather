@@ -8,6 +8,7 @@ using Weather.Models.Decanat;
 using System.Linq;
 using Weather.Data;
 using System.Data;
+using Weather.Models.Weather;
 
 namespace Weather.ViewModels
 {
@@ -75,12 +76,171 @@ namespace Weather.ViewModels
             set => Set(ref _TextWeather, value);
         }
 
-        private DataTable _Table;
 
+        /// <summary>
+        /// Результат запита SELECT
+        /// </summary>
+        private DataTable _Table;
         public DataTable Table
         {
             get => _Table;
             set => Set(ref _Table, value);
+        }
+
+        /// <summary>
+        /// Обраний день в таблиці
+        /// </summary>
+        private DayWeather _SelectedDay;
+        public DayWeather SelectedDay
+        {
+            get => _SelectedDay;
+            set => Set(ref _SelectedDay, value);
+        }
+
+        /// <summary>
+        /// Параметри пошуку
+        /// </summary>
+        private DesiredDay _desiredDay;
+        public DesiredDay desiredDay
+        {
+            get => _desiredDay;
+            set => Set(ref _desiredDay, value);
+        }
+
+        #endregion
+
+        /*------------------------------------------------------------------------------------*/
+
+        #region Методы
+
+        internal void WeatherSearch()
+        {
+            int year = 2021;
+            string SearchStr = "SELECT day(t.date) as `День`," +
+                             "month(t.date) as `Місяць`," +
+                             "temperature as `Температура`," +
+                             "pressure as `Тиск`," +
+                             "precipitation as `Опади`" +
+                             "FROM weather2021 t ";                             
+            string StartDateStr = "";
+            string EndDateStr = "";
+            bool twoDates = false;
+            bool IsWhere = false;
+
+            //WorkWithDataBase.OpenConnection("server=localhost;uid=root;pwd=1h9e8d7;database=weather;");
+
+            #region Додавання пошуку за датою
+
+            if (desiredDay.EndMonth > 12)
+                desiredDay.EndMonth = 12;
+            if (desiredDay.StartMonth > 12)
+                desiredDay.StartMonth = 12;
+
+            if (desiredDay.StartDay < 0)
+                desiredDay.StartDay = 0;
+            if (desiredDay.EndDay < 0)
+                desiredDay.EndDay = 0;
+
+            if ((desiredDay.StartMonth != 0) ||
+                (desiredDay.StartDay != 0) ||
+                (desiredDay.EndMonth != 0) ||
+                (desiredDay.EndDay != 0) ||
+                (desiredDay.StartTemperature != 0) ||
+                (desiredDay.EndTemperature != 0) ||
+                (desiredDay.StartPressure != 0) ||
+                (desiredDay.EndPressure != 0) ||
+                desiredDay.IsPrecipitation())
+            {
+                SearchStr += "WHERE";
+                IsWhere = true;
+            }            
+
+            if (desiredDay.StartDay > 0)
+            {
+                if (desiredDay.StartMonth == 0)
+                    desiredDay.StartMonth = 1;
+                if (desiredDay.EndMonth == 0)
+                    desiredDay.EndMonth = 12;
+            }
+            if ((desiredDay.EndDay > 0) && (desiredDay.EndMonth == 0))
+                desiredDay.EndMonth = 12;
+
+            if (desiredDay.StartMonth > 0)
+            {
+                if (desiredDay.StartMonth < desiredDay.EndMonth)
+                {
+                    StartDateStr += desiredDay.StartMonth.ToString();                    
+                    EndDateStr += desiredDay.EndMonth.ToString();
+                    twoDates = true;
+                }
+                else
+                {
+                    StartDateStr += desiredDay.StartMonth.ToString();
+                    desiredDay.EndMonth = desiredDay.StartMonth;
+                    EndDateStr += desiredDay.EndMonth.ToString();
+                }
+            }     
+            else
+            {
+                if (desiredDay.EndMonth >= 0)                   
+                {
+                    desiredDay.StartMonth = 1;
+                    StartDateStr += desiredDay.StartMonth.ToString();
+                    if (desiredDay.EndMonth == 0)
+                        desiredDay.EndMonth = 12;
+                    EndDateStr += desiredDay.EndMonth.ToString();
+                    twoDates = true;
+                }
+            }
+
+            if (desiredDay.StartDay > DateTime.DaysInMonth(year, desiredDay.StartMonth))
+                desiredDay.StartDay = DateTime.DaysInMonth(year, desiredDay.StartMonth);
+            if (desiredDay.EndDay > DateTime.DaysInMonth(year, desiredDay.EndMonth))
+                desiredDay.EndDay = DateTime.DaysInMonth(year, desiredDay.EndMonth);
+
+            if (desiredDay.StartDay > 0)
+            {
+                if (desiredDay.StartDay < desiredDay.EndDay)
+                {
+                    StartDateStr += "," + desiredDay.StartDay.ToString();
+                    EndDateStr += "," + desiredDay.EndDay.ToString();
+                    twoDates = true;
+                }
+                else
+                {
+                    StartDateStr += "," + desiredDay.StartDay.ToString();
+                    EndDateStr += "," + desiredDay.StartDay.ToString();
+                }
+            }
+            else
+            {
+                if (desiredDay.EndMonth >= 0)
+                {
+                    StartDateStr += ",1";
+                    if (desiredDay.EndDay == 0)
+                        desiredDay.EndDay = DateTime.DaysInMonth(year, desiredDay.EndMonth);
+                    EndDateStr += "," + desiredDay.EndDay.ToString();
+                    twoDates = true;
+                }
+            }
+
+            #endregion
+
+            if (IsWhere)
+            {
+                StartDateStr += "," + year.ToString();
+                EndDateStr += "," + year.ToString();
+                if (!twoDates)
+                    SearchStr += "`date`=STR_TO_DATE( '" + StartDateStr + "', '%m,%d,%Y' ) ";
+                else
+                    SearchStr += "`date` >= STR_TO_DATE( '" + StartDateStr + "', '%m,%d,%Y' ) && " +
+                                 "`date` <= STR_TO_DATE( '" + EndDateStr + "', '%m,%d,%Y' ) ";
+            }   
+
+            SearchStr += ";";
+            Table = WorkWithDataBase.ExecuteQuery(SearchStr);
+
+            //WorkWithDataBase.CloseConnection();
         }
 
         #endregion
@@ -100,6 +260,19 @@ namespace Weather.ViewModels
         }
         #endregion
 
+        #region Пошук
+
+        public ICommand SearchCommand { get; }
+
+        private bool CanSearchCommandExecute(object p) => true;
+
+        private void OnSearchCommandExecuted(object p)
+        {
+            WeatherSearch();
+        }
+
+        #endregion
+
         #endregion
 
         /*------------------------------------------------------------------------------------*/
@@ -109,6 +282,8 @@ namespace Weather.ViewModels
             #region Команды
 
             CloseApplicationCommand = new LambdaCommand(OnCloseApplicationCommandExecuted, CanCloseApplicationCommandExecute);
+
+            SearchCommand = new LambdaCommand(OnSearchCommandExecuted, CanSearchCommandExecute);
 
             #endregion
 
@@ -130,21 +305,34 @@ namespace Weather.ViewModels
             });
             Groups = new ObservableCollection<Group>(groups);
 
+            //WorkWithDataBase.OpenConnection("server=localhost;uid=root;pwd=1h9e8d7;database=weather;");
+            //// string response = WorkWithDataBase.ExecuteQuery("SELECT temperature FROM weather2021 WHERE date='2021-01-13';");
+            ////TextWeather = response;
+            ////string sql = "SELECT temperature FROM weather2021 WHERE date='2021-01-13';";
+            ////string sql = "SELECT * FROM weather2021;";            
+            //string sql = "SELECT day(t.date) as `День`," +
+            //             "month(t.date) as `Місяць`," +
+            //             "temperature as `Температура`," +
+            //             "pressure as `Тиск`," +
+            //             "precipitation as `Опади`" +
+            //             "from weather2021 t;";
+            //Table = WorkWithDataBase.ExecuteQuery(sql);
+
+            desiredDay = new DesiredDay();
+            //desiredDay.StartDay = 1;
+            //desiredDay.StartMonth = 1;
+            //desiredDay.EndDay = 30;
+            //desiredDay.EndMonth = 5;
+            desiredDay.StartDay = 0;
+            desiredDay.StartMonth = 0;
+            desiredDay.EndDay = 0;
+            desiredDay.EndMonth = 0;
+            //Table = new DataTable();
+
             WorkWithDataBase.OpenConnection("server=localhost;uid=root;pwd=1h9e8d7;database=weather;");
-            // string response = WorkWithDataBase.ExecuteQuery("SELECT temperature FROM weather2021 WHERE date='2021-01-13';");
-            //TextWeather = response;
-            //string sql = "SELECT temperature FROM weather2021 WHERE date='2021-01-13';";
-            //string sql = "SELECT * FROM weather2021;";            
-            string sql = "SELECT day(t.date) as `День`," +
-                         "month(t.date) as `Місяць`," +
-                         "temperature as `Температура`," +
-                         "pressure as `Тиск`," +
-                         "precipitation as `Опади`" +
-                         "from weather2021 t;";
-            Table = WorkWithDataBase.ExecuteQuery(sql);
 
 
-            WorkWithDataBase.CloseConnection();
+            //WorkWithDataBase.CloseConnection();
 
         }
     }

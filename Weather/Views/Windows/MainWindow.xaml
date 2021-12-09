@@ -11,7 +11,7 @@
         Title="{Binding Title}"
         Height="450" Width="800">
     <Window.InputBindings>
-        <KeyBinding Modifiers="Control" Key="Q" Command="{Binding CloseApplicationCommand}"/>        
+        <KeyBinding Modifiers="Control" Key="Q" Command="{Binding CloseApplicationCommand}"/>
     </Window.InputBindings>
     <Window.DataContext>
         <vm:MainWindowViewModel/>
@@ -28,7 +28,7 @@
                     <MenuItem.Command>
                         <cmd:CloseApplicationCommand/>
                     </MenuItem.Command>
-                </MenuItem>-->                
+                </MenuItem>-->
             </MenuItem>
             <MenuItem Header="Помощь">
                 <MenuItem Header="О программе"/>
@@ -36,30 +36,128 @@
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem MinWidth="150" MaxWidth="300">
-                <TextBlock Text="{Binding Status}"/>                
+                <TextBlock Text="{Binding Status}"/>
             </StatusBarItem>
             <StatusBarItem>
                 <ProgressBar Width="120" Height="14" Value="30"/>
             </StatusBarItem>
         </StatusBar>
         <TabControl>
-            <TabItem Header="Вкладка 2">
-                <GroupBox Header="Погода 2021">
-                    <DataGrid ItemsSource="{Binding Table}"   
-                              AutoGenerateColumns="False"
-                              IsReadOnly="True"
-                              GridLinesVisibility="Vertical"
-                              VerticalGridLinesBrush="DarkGray"
-                              AlternatingRowBackground="LightGray">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Місяць" Binding="{Binding Місяць}"  Width="50"/>
-                            <DataGridTextColumn Header="День" Binding="{Binding День}" Width="50"/>                            
-                            <DataGridTextColumn Header="Температура" Binding="{Binding Температура}"  Width="90"/>
-                            <DataGridTextColumn Header="Тиск" Binding="{Binding Тиск}"  Width="50"/>
-                            <DataGridTextColumn Header="Опади" Binding="{Binding Опади}" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </GroupBox>
+            <TabItem Header="Погода">                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="290"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>                    
+                        <GroupBox Grid.Column="0" Header="Пошук" DataContext="{Binding desiredDay}">                        
+                            <Grid Margin="10 0 0 0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                    <TextBlock Text="Рік:"/>
+                                    <ComboBox SelectedIndex="0" VerticalAlignment="Top" Margin="5 0 5 0" IsEnabled="False">
+                                        <TextBlock>2021</TextBlock>
+                                    </ComboBox>
+                                    <TextBlock Text="(Відключено)" Foreground="DarkGray"/>
+                                </StackPanel>
+                                <Grid Grid.Row="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="Місяць:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="Від " Margin="5 0 5 0"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartMonth, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBlock Text="До " Margin="5 0 5 0"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndMonth, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>                            
+                                </Grid>
+                                <Grid Grid.Row="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="День:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="Від " Margin="5 0 5 0"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartDay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBlock Text="До " Margin="5 0 5 0"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndDay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Row="3">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="Температура:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="Від " Margin="5 0 5 0"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartTemperature, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBlock Text="До " Margin="5 0 5 0"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndTemperature, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Row="4">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="Тиск:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="Від " Margin="5 0 5 0"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartPressure, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBlock Text="До " Margin="5 0 5 0"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndPressure, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Row="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="Опади:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
+                                    <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center">
+                                        <CheckBox Content="Без опадів" IsChecked="{Binding Precipitation.WithoutPrecipitation}"/>
+                                        <CheckBox Content="Дощ" IsChecked="{Binding Precipitation.Rain}"/>
+                                        <CheckBox Content="Сніг" IsChecked="{Binding Precipitation.Snow}"/>
+                                        <CheckBox Content="Град" IsChecked="{Binding Precipitation.Hail}"/>
+                                    </StackPanel>
+                                </Grid>                        
+                            </Grid>
+                        </GroupBox>
+                        <Button Grid.Row="1" Content="Пошук" Margin="0 10 0 0" Width="60" Command="{Binding SearchCommand}" Height="25" VerticalAlignment="Top"/>
+                    </Grid>
+                    <GroupBox Grid.Column="1"  Header="Погода 2021">
+                        <DataGrid ItemsSource="{Binding Table}"   
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  GridLinesVisibility="Vertical"
+                                  VerticalGridLinesBrush="DarkGray"
+                                  AlternatingRowBackground="LightGray"
+                                  SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Місяць" Binding="{Binding Місяць}"  Width="50"/>
+                                <DataGridTextColumn Header="День" Binding="{Binding День}" Width="50"/>
+                                <DataGridTextColumn Header="Температура" Binding="{Binding Температура}"  Width="90"/>
+                                <DataGridTextColumn Header="Тиск" Binding="{Binding Тиск}"  Width="50"/>
+                                <DataGridTextColumn Header="Опади" Binding="{Binding Опади}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                </Grid>
             </TabItem>
             <TabItem>
                 <TabItem.Header>
@@ -74,15 +172,16 @@
                     <Grid.ColumnDefinitions>
                         <!--<ColumnDefinition Width="3*"/>
                         <ColumnDefinition Width="7*"/>-->
-                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="18"/>
+                        <ColumnDefinition Width="232"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Grid.Column="0" Header="Группы">
+                    <GroupBox Grid.Column="0" Header="Группы" Grid.ColumnSpan="2">
                         <ListBox ItemsSource="{Binding Groups}" SelectedIndex="0"
                                  DisplayMemberPath="Name"
                                  SelectedItem="{Binding SelectedGroup}"/>
                     </GroupBox>
-                    <GroupBox Grid.Column="1" Header="{Binding SelectedGroup.Name,  FallbackValue='Студенты', TargetNullValue='Группа не выбрана'}">
+                    <GroupBox Grid.Column="2" Header="{Binding SelectedGroup.Name,  FallbackValue='Студенты', TargetNullValue='Группа не выбрана'}">
                         <DataGrid ItemsSource="{Binding SelectedGroup.Students}"
                                   AutoGenerateColumns="False"
                                   CanUserAddRows="False"
@@ -104,8 +203,8 @@
                                     </DataGridTemplateColumn.CellTemplate>-->
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="decanat:Student">
-                                            <TextBlock Text="{Binding Birthday, StringFormat='dd.MM.yyyy'}"/>                                            
-                                        </DataTemplate>                                        
+                                            <TextBlock Text="{Binding Birthday, StringFormat='dd.MM.yyyy'}"/>
+                                        </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                     <DataGridTemplateColumn.CellEditingTemplate>
                                         <DataTemplate DataType="decanat:Student">
@@ -114,12 +213,12 @@
                                     </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="Заметки" Binding="{Binding Description}" Width="*"/>
-                                <!--<DataGridTextColumn Header="Группа" Binding="{Binding DataContext.SelectedGroup.Name, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>-->                                
-                            </DataGrid.Columns>                            
+                                <!--<DataGridTextColumn Header="Группа" Binding="{Binding DataContext.SelectedGroup.Name, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>-->
+                            </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
                 </Grid>
-            </TabItem>            
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>
