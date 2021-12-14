@@ -76,6 +76,36 @@ namespace Weather.ViewModels
             set => Set(ref _TextWeather, value);
         }
 
+        /// <summary>
+        /// Чи проходить процесс редагування
+        /// </summary>
+        private bool _IsEditing = false;
+        public bool IsEditing
+        {
+            get => _IsEditing;
+            set => Set(ref _IsEditing, value);
+        }
+
+        /// <summary>
+        /// Чи проходить процесс додавання рядка
+        /// </summary>
+        private bool _IsAdding = false;
+        public bool IsAdding
+        {
+            get => _IsAdding;
+            set => Set(ref _IsAdding, value);
+        }
+
+
+        /// <summary>
+        /// Активна вкладка
+        /// </summary>
+        private int _ActiveTab = 0;
+        public int ActiveTab
+        {
+            get => _ActiveTab;
+            set => Set(ref _ActiveTab, value);
+        }
 
         /// <summary>
         /// Результат запита SELECT
@@ -88,7 +118,7 @@ namespace Weather.ViewModels
         }
 
         /// <summary>
-        /// Обраний рядок в таблиці
+        /// Номер Обраного рядка в таблиці
         /// </summury>
         private int _SelectedRowIndex;
         public int SelectedRowIndex
@@ -132,7 +162,8 @@ namespace Weather.ViewModels
                              "month(t.date) as `Місяць`," +
                              "temperature as `Температура`," +
                              "pressure as `Тиск`," +
-                             "precipitation as `Опади`" +
+                             "precipitation as `Опади`," +
+                             "precipitation | 0 as `PercInt`" +
                              "FROM weather2021 t ";                             
             string StartDateStr = "";
             string EndDateStr = "";
@@ -321,8 +352,44 @@ namespace Weather.ViewModels
 
         #endregion
 
-        #region Редагування рядка
+        #region Перехід до Редагування рядка
 
+        public void RowEditButtonClick()
+        {
+            ActiveTab = 1;
+            IsEditing = true;
+            DayWeather selday = new DayWeather();
+            DataRow row = Table.NewRow();
+            row = Table.Rows[SelectedRowIndex];            
+            selday.Month = Convert.ToInt32(row["Місяць"]);
+            selday.Day = Convert.ToInt32(row["День"]);
+            selday.Temperature = Convert.ToSByte(row["Температура"]);
+            selday.Pressure = Convert.ToUInt16(row["Тиск"]);
+            selday.PreciInt = Convert.ToInt32(row["PercInt"]);
+            selday.PrecipitationToBool();
+            SelectedDay = selday;
+            Status = "Редагування";
+        }
+
+        #endregion
+
+        #region Внесення змін у рядок
+
+        internal void SaveChanges()
+        {
+            SelectedDay.PresipitationToInt();
+            string updateStr = "UPDATE weather2021 " +
+                "SET temperature = '" + SelectedDay.Temperature.ToString() + "', " +
+                "pressure = '" + SelectedDay.Pressure.ToString() + "', " +
+                "precipitation = '" + SelectedDay.PreciInt.ToString() + "' " +
+                "WHERE date = ";
+            string dateStr = SelectedDay.Month.ToString() + "," +
+                SelectedDay.Day.ToString() + ",2021";
+            updateStr += "STR_TO_DATE( '" + dateStr + "', '%m,%d,%Y' );";
+            WorkWithDataBase.ExecuteQueryWithoutResponse(updateStr);
+            ActiveTab = 0;
+            IsEditing = false;
+        }
 
         #endregion
 
@@ -359,11 +426,11 @@ namespace Weather.ViewModels
         #region Редагування
         public ICommand EditCommand { get; }
 
-        private bool CanEditCommandExecute(object p) => SelectedRowIndex > 0;
+        private bool CanEditCommandExecute(object p) => SelectedRowIndex >= 0;
 
         private void OnEditCommandExecuted(object p)
         {
-            WeatherSearch();
+            RowEditButtonClick();
         }
 
         #endregion
@@ -371,7 +438,7 @@ namespace Weather.ViewModels
         #region Видалення
         public ICommand RemoveCommand { get; }
 
-        private bool CanRemoveCommandExecute(object p) => SelectedRowIndex > 0;
+        private bool CanRemoveCommandExecute(object p) => SelectedRowIndex >= 0;
 
         private void OnRemoveCommandExecuted(object p)
         {
@@ -392,6 +459,17 @@ namespace Weather.ViewModels
 
         #endregion
 
+        #region Створення нового запису
+        public ICommand ApplyCommand { get; }
+
+        private bool CanApplyCommandExecute(object p) => true;
+
+        private void OnApplyCommandExecuted(object p)
+        {
+            SaveChanges();
+        }
+
+        #endregion
 
 
         #endregion
@@ -408,6 +486,7 @@ namespace Weather.ViewModels
             AddCommand = new LambdaCommand(OnAddCommandExecuted, CanAddCommandExecute);
             EditCommand = new LambdaCommand(OnEditCommandExecuted, CanEditCommandExecute);
             RemoveCommand = new LambdaCommand(OnRemoveCommandExecuted, CanRemoveCommandExecute);
+            ApplyCommand = new LambdaCommand(OnApplyCommandExecuted, CanApplyCommandExecute);
 
             #endregion
 

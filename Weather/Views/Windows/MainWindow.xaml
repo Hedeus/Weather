@@ -42,7 +42,7 @@
                 <ProgressBar Width="120" Height="14" Value="30"/>
             </StatusBarItem>
         </StatusBar>
-        <TabControl>
+        <TabControl SelectedIndex="{Binding ActiveTab}">
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -163,7 +163,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="292"/>
                                 <RowDefinition/>
-                            </Grid.RowDefinitions>
+                            </Grid.RowDefinitions>                            
                             <DataGrid Grid.Row="0" ItemsSource="{Binding Table}"   
                                       AutoGenerateColumns="False"
                                       IsReadOnly="True"
@@ -171,7 +171,7 @@
                                       VerticalGridLinesBrush="DarkGray"
                                       AlternatingRowBackground="LightGray"
                                       SelectionMode="Single"
-                                      SelectedIndex="{Binding SelectedRowIndex}">
+                                      SelectedIndex="{Binding SelectedRowIndex}">                                
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Місяць" Binding="{Binding Місяць}"  Width="50"/>
                                     <DataGridTextColumn Header="День" Binding="{Binding День}" Width="50"/>
@@ -207,25 +207,26 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem>
+            <TabItem IsEnabled="{Binding IsEditing}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">                        
                         <fa:ImageAwesome Icon="Regular_File" Height="13" Margin="0,0,5,0"
                                          Foreground="Gray"/>
-                        <TextBlock Text="{Binding SelectedRowIndex}"/>
+                        <TextBlock Text="{Binding SelectedDay.Month}"/>
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>                                                
-                        <ColumnDefinition Width="207"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0" Grid.ColumnSpan="3">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="35"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>                        
-                        <TextBlock Grid.Row="0" Text="Введіть дані! Поля з зірочкою обов'зкові до заповнення."/>
+                        <TextBlock Grid.Row="0" Text="Введіть дані! Поля з зірочкою обов'зкові до заповнення." TextWrapping="Wrap" Width=" 180" HorizontalAlignment="Left"/>
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="85"/>
@@ -239,17 +240,24 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="Місяць*" Margin="5 5 0 0"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedDay.Month}" Width="50" Margin="5 3 5 3"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedDay.Month, UpdateSourceTrigger=PropertyChanged}" Width="50" Margin="5 3 5 3" IsEnabled="{Binding IsAdding}"/>
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="День*" Margin="5 5 0 0"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedDay.Day}" Width="50" Margin="5 3 5 3"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedDay.Day, UpdateSourceTrigger=PropertyChanged}" Width="50" Margin="5 3 5 3" IsEnabled="{Binding IsAdding}"/>
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Температура" Margin="5 5 0 0"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedDay.Temperature}" Width="50" Margin="5 3 5 3"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedDay.Temperature, UpdateSourceTrigger=PropertyChanged}" Width="50" Margin="5 3 5 3"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="Тиск" Margin="5 5 0 0"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SelectedDay.Pressure}" Width="50" Margin="5 3 5 3"/>                            
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SelectedDay.Pressure, UpdateSourceTrigger=PropertyChanged}" Width="50" Margin="5 3 5 3"/>                            
                         </Grid> 
                     </Grid>
-                    <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 25 0 0">
-                        <TextBlock Text="Опади:" FontWeight="Bold" Margin="10 3 3 3"/>
+                    <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 0 0">
+                        <Button Height="25" Margin="3 3 5 0" Command="{Binding ApplyCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:ImageAwesome Icon="Solid_Check" Height="13" Margin="3,0,3,0"
+                                             Foreground="ForestGreen"/>
+                                <TextBlock Text="Внести" Margin="0 0 5 0"/>
+                            </StackPanel>
+                        </Button>
+                        <TextBlock Text="Опади:" FontWeight="Bold" Margin="10 15 3 3"/>
                         <CheckBox Content="Без опадів" IsChecked="{Binding SelectedDay.Precipitation.WithoutPrecipitation}" Margin="3 3 3 3"/>
                         <CheckBox Content="Дощ" IsChecked="{Binding SelectedDay.Precipitation.Rain}" Margin="3 3 3 3"/>
                         <CheckBox Content="Сніг" IsChecked="{Binding SelectedDay.Precipitation.Snow}" Margin="3 3 3 3"/>

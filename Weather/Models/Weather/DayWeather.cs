@@ -15,7 +15,7 @@ namespace Weather.Models.Weather
     }
     class DayWeather
     {
-        public byte Month { get; set; }
+        public int Month { get; set; }
         public int Day { get; set; }
         public sbyte Temperature { get; set; }
         public ushort Pressure { get; set; }

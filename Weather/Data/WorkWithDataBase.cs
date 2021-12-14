@@ -63,6 +63,7 @@ namespace Weather.Data
             else
                 return null;
         }
+           
 
         //public static List<string[]> ExecuteQuery(string query, int col)
         //{
