@@ -281,7 +281,18 @@ namespace Weather.ViewModels
 
             #endregion
 
-            
+            #region Пошук за погодними умовами
+
+            if (desiredDay.PresipitationToInt() > 0)
+            {
+                if (!(!desiredDay.IsDate && !desiredDay.IsTemperature && !desiredDay.IsPress))
+                    SearchStr += "&& ";
+                SearchStr += "precipitation & " + desiredDay.PresipitationToInt(); 
+            }
+
+            #endregion
+
+
             //if (desiredDay.IsDate)
             //{
             //    SearchStr += "month(t.date) >= " + desiredDay.StartMonth.ToString() +
