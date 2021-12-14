@@ -38,6 +38,10 @@ namespace Weather.Models.Weather
 
     class DesiredDay
     {
+
+        public bool IsDate { get; set; }
+        public bool IsTemperature { get; set; }
+        public bool IsPress { get; set; }
         public byte StartMonth { get; set; }
         public byte EndMonth { get; set; }
         public int StartDay { get; set; }

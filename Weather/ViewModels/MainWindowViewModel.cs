@@ -124,120 +124,173 @@ namespace Weather.ViewModels
                              "FROM weather2021 t ";                             
             string StartDateStr = "";
             string EndDateStr = "";
+            string StartTempStr = "";
+            string EndTempStr = "";
+            string StartPresStr = "";
+            string EndPresStr = "";
             bool twoDates = false;
             bool IsWhere = false;
 
             //WorkWithDataBase.OpenConnection("server=localhost;uid=root;pwd=1h9e8d7;database=weather;");
 
-            #region Додавання пошуку за датою
+            #region Перевірка не необхідність пошуку, або вивід всіх даних з бази
 
-            if (desiredDay.EndMonth > 12)
-                desiredDay.EndMonth = 12;
-            if (desiredDay.StartMonth > 12)
-                desiredDay.StartMonth = 12;
+            if (desiredDay.IsDate)
+            {
+                if (desiredDay.EndMonth > 12)
+                    desiredDay.EndMonth = 12;
+                if (desiredDay.StartMonth > 12)
+                    desiredDay.StartMonth = 12;
 
-            if (desiredDay.StartDay < 0)
-                desiredDay.StartDay = 0;
-            if (desiredDay.EndDay < 0)
-                desiredDay.EndDay = 0;
+                if (desiredDay.StartDay < 0)
+                    desiredDay.StartDay = 0;
+                if (desiredDay.EndDay < 0)
+                    desiredDay.EndDay = 0;
+            }
 
-            if ((desiredDay.StartMonth != 0) ||
+            if ((desiredDay.IsDate && ((desiredDay.StartMonth != 0) ||
                 (desiredDay.StartDay != 0) ||
                 (desiredDay.EndMonth != 0) ||
-                (desiredDay.EndDay != 0) ||
-                (desiredDay.StartTemperature != 0) ||
-                (desiredDay.EndTemperature != 0) ||
-                (desiredDay.StartPressure != 0) ||
-                (desiredDay.EndPressure != 0) ||
+                (desiredDay.EndDay != 0))) ||
+                desiredDay.IsTemperature ||
+                desiredDay.IsPress ||
                 desiredDay.IsPrecipitation())
             {
-                SearchStr += "WHERE";
+                SearchStr += "WHERE ";
                 IsWhere = true;
-            }            
-
-            if (desiredDay.StartDay > 0)
-            {
-                if (desiredDay.StartMonth == 0)
-                    desiredDay.StartMonth = 1;
-                if (desiredDay.EndMonth == 0)
-                    desiredDay.EndMonth = 12;
             }
-            if ((desiredDay.EndDay > 0) && (desiredDay.EndMonth == 0))
-                desiredDay.EndMonth = 12;
 
-            if (desiredDay.StartMonth > 0)
-            {
-                if (desiredDay.StartMonth < desiredDay.EndMonth)
-                {
-                    StartDateStr += desiredDay.StartMonth.ToString();                    
-                    EndDateStr += desiredDay.EndMonth.ToString();
-                    twoDates = true;
-                }
-                else
-                {
-                    StartDateStr += desiredDay.StartMonth.ToString();
-                    desiredDay.EndMonth = desiredDay.StartMonth;
-                    EndDateStr += desiredDay.EndMonth.ToString();
-                }
-            }     
+            //if (!IsWhere)
             else
             {
-                if (desiredDay.EndMonth >= 0)                   
+                SearchStr += ";";
+                Table = WorkWithDataBase.ExecuteQuery(SearchStr);
+                return;
+            }
+
+
+            #endregion
+
+            #region Додавання пошуку за датою
+
+            if (desiredDay.IsDate)
+            {
+                if (desiredDay.StartDay > 0)
                 {
-                    desiredDay.StartMonth = 1;
-                    StartDateStr += desiredDay.StartMonth.ToString();
+                    if (desiredDay.StartMonth == 0)
+                        desiredDay.StartMonth = 1;
                     if (desiredDay.EndMonth == 0)
                         desiredDay.EndMonth = 12;
-                    EndDateStr += desiredDay.EndMonth.ToString();
-                    twoDates = true;
                 }
-            }
+                if ((desiredDay.EndDay > 0) && (desiredDay.EndMonth == 0))
+                    desiredDay.EndMonth = 12;
 
-            if (desiredDay.StartDay > DateTime.DaysInMonth(year, desiredDay.StartMonth))
-                desiredDay.StartDay = DateTime.DaysInMonth(year, desiredDay.StartMonth);
-            if (desiredDay.EndDay > DateTime.DaysInMonth(year, desiredDay.EndMonth))
-                desiredDay.EndDay = DateTime.DaysInMonth(year, desiredDay.EndMonth);
-
-            if (desiredDay.StartDay > 0)
-            {
-                if (desiredDay.StartDay < desiredDay.EndDay)
+                if (desiredDay.StartMonth > 0)
                 {
-                    StartDateStr += "," + desiredDay.StartDay.ToString();
-                    EndDateStr += "," + desiredDay.EndDay.ToString();
-                    twoDates = true;
+                    if (desiredDay.StartMonth < desiredDay.EndMonth)
+                    {
+                        StartDateStr += desiredDay.StartMonth.ToString();
+                        EndDateStr += desiredDay.EndMonth.ToString();
+                        twoDates = true;
+                    }
+                    else
+                    {
+                        StartDateStr += desiredDay.StartMonth.ToString();
+                        desiredDay.EndMonth = desiredDay.StartMonth;
+                        EndDateStr += desiredDay.EndMonth.ToString();
+                    }
                 }
                 else
                 {
-                    StartDateStr += "," + desiredDay.StartDay.ToString();
-                    EndDateStr += "," + desiredDay.StartDay.ToString();
+                    if (desiredDay.EndMonth >= 0)
+                    {
+                        desiredDay.StartMonth = 1;
+                        StartDateStr += desiredDay.StartMonth.ToString();
+                        if (desiredDay.EndMonth == 0)
+                            desiredDay.EndMonth = 12;
+                        EndDateStr += desiredDay.EndMonth.ToString();
+                        twoDates = true;
+                    }
                 }
-            }
-            else
-            {
-                if (desiredDay.EndMonth >= 0)
+
+                if (desiredDay.StartDay > DateTime.DaysInMonth(year, desiredDay.StartMonth))
+                    desiredDay.StartDay = DateTime.DaysInMonth(year, desiredDay.StartMonth);
+                if (desiredDay.EndDay > DateTime.DaysInMonth(year, desiredDay.EndMonth))
+                    desiredDay.EndDay = DateTime.DaysInMonth(year, desiredDay.EndMonth);
+
+                if (desiredDay.StartDay > 0)
                 {
-                    StartDateStr += ",1";
-                    if (desiredDay.EndDay == 0)
-                        desiredDay.EndDay = DateTime.DaysInMonth(year, desiredDay.EndMonth);
-                    EndDateStr += "," + desiredDay.EndDay.ToString();
-                    twoDates = true;
+                    if (desiredDay.StartDay < desiredDay.EndDay)
+                    {
+                        StartDateStr += "," + desiredDay.StartDay.ToString();
+                        EndDateStr += "," + desiredDay.EndDay.ToString();
+                        twoDates = true;
+                    }
+                    else
+                    {
+                        StartDateStr += "," + desiredDay.StartDay.ToString();
+                        EndDateStr += "," + desiredDay.StartDay.ToString();
+                    }
                 }
+                else
+                {
+                    if (desiredDay.EndMonth >= 0)
+                    {
+                        StartDateStr += ",1";
+                        if (desiredDay.EndDay == 0)
+                            desiredDay.EndDay = DateTime.DaysInMonth(year, desiredDay.EndMonth);
+                        EndDateStr += "," + desiredDay.EndDay.ToString();
+                        twoDates = true;
+                    }
+                }
+
+                StartDateStr += "," + year.ToString();
+                EndDateStr += "," + year.ToString();
+
+                if (!twoDates)
+                {
+                    SearchStr += "`date`=STR_TO_DATE( '" + StartDateStr + "', '%m,%d,%Y' ) ";
+                }
+                else
+                    SearchStr += "`date` >= STR_TO_DATE( '" + StartDateStr + "', '%m,%d,%Y' ) && " +
+                                 "`date` <= STR_TO_DATE( '" + EndDateStr + "', '%m,%d,%Y' ) ";
             }
 
             #endregion
 
-            if (IsWhere)
-            {
-                StartDateStr += "," + year.ToString();
-                EndDateStr += "," + year.ToString();
-                if (!twoDates)
-                    SearchStr += "`date`=STR_TO_DATE( '" + StartDateStr + "', '%m,%d,%Y' ) ";
-                else
-                    SearchStr += "`date` >= STR_TO_DATE( '" + StartDateStr + "', '%m,%d,%Y' ) && " +
-                                 "`date` <= STR_TO_DATE( '" + EndDateStr + "', '%m,%d,%Y' ) ";
-            }   
+            #region Пошук за температурою
 
+            if (desiredDay.IsTemperature)
+            {
+                if (desiredDay.IsDate)
+                    SearchStr += "&& ";
+                SearchStr += "temperature >= " + desiredDay.StartTemperature.ToString() + " &&" +
+                             " temperature <= " + desiredDay.EndTemperature.ToString() + " "; 
+            }
+            #endregion
+
+            #region Пошук за тиском
+
+            if (desiredDay.IsPress)
+            {
+                if (desiredDay.IsTemperature || (desiredDay.IsDate && !desiredDay.IsTemperature))
+                    SearchStr += "&& ";
+                SearchStr += "pressure >= " + desiredDay.StartPressure.ToString() + " &&" +
+                            " pressure <= " + desiredDay.EndPressure.ToString() + " ";
+            }
+
+            #endregion
+
+            
+            //if (desiredDay.IsDate)
+            //{
+            //    SearchStr += "month(t.date) >= " + desiredDay.StartMonth.ToString() +
+            //        " && month(t.date) <= " + desiredDay.EndMonth.ToString() +
+            //        " && day(t.date) >= " + desiredDay.StartDay.ToString() +
+            //        " && day(t.date) <= " + desiredDay.EndDay.ToString();
+            //}
             SearchStr += ";";
+
             Table = WorkWithDataBase.ExecuteQuery(SearchStr);
 
             //WorkWithDataBase.CloseConnection();
@@ -319,14 +372,14 @@ namespace Weather.ViewModels
             //Table = WorkWithDataBase.ExecuteQuery(sql);
 
             desiredDay = new DesiredDay();
-            //desiredDay.StartDay = 1;
-            //desiredDay.StartMonth = 1;
-            //desiredDay.EndDay = 30;
-            //desiredDay.EndMonth = 5;
-            desiredDay.StartDay = 0;
-            desiredDay.StartMonth = 0;
-            desiredDay.EndDay = 0;
-            desiredDay.EndMonth = 0;
+            desiredDay.StartDay = 20;
+            desiredDay.StartMonth = 3;
+            desiredDay.EndDay = 29;
+            desiredDay.EndMonth = 8;
+            //desiredDay.StartDay = 0;
+            //desiredDay.StartMonth = 0;
+            //desiredDay.EndDay = 0;
+            //desiredDay.EndMonth = 0;
             //Table = new DataTable();
 
             WorkWithDataBase.OpenConnection("server=localhost;uid=root;pwd=1h9e8d7;database=weather;");

@@ -51,14 +51,14 @@
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="290"/>
+                            <RowDefinition Height="310"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>                    
                         <GroupBox Grid.Column="0" Header="Пошук" DataContext="{Binding desiredDay}">                        
                             <Grid Margin="10 0 0 0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="25"/>
-                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="60"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
@@ -73,28 +73,33 @@
                                 </StackPanel>
                                 <Grid Grid.Row="1">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition/>
+                                        <RowDefinition Height="40"/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Text="Місяць:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center">
+                                        <CheckBox Margin="40 3 3 0" IsChecked="{Binding IsDate}">
+                                            <TextBlock Text="Часовий проміжок" FontWeight="Bold"/>
+                                        </CheckBox>
+                                        <TextBlock Grid.Row="0" Text="Місяць:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
+                                    </StackPanel>
+                                    <StackPanel  Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                         <TextBlock Text="Від " Margin="5 0 5 0"/>
-                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartMonth, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartMonth, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDate}"/>
                                         <TextBlock Text="До " Margin="5 0 5 0"/>
-                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndMonth, UpdateSourceTrigger=PropertyChanged}"/>
-                                    </StackPanel>                            
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndMonth, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDate}"/>
+                                    </StackPanel>                                    
                                 </Grid>
                                 <Grid Grid.Row="2">
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
                                         <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Text="День:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
+                                    </Grid.RowDefinitions>  
+                                        <TextBlock Grid.Row="0" Text="День:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>                                                                       
                                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                         <TextBlock Text="Від " Margin="5 0 5 0"/>
-                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartDay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartDay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDate}"/>
                                         <TextBlock Text="До " Margin="5 0 5 0"/>
-                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndDay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndDay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDate}"/>
                                     </StackPanel>
                                 </Grid>
                                 <Grid Grid.Row="3">
@@ -102,12 +107,15 @@
                                         <RowDefinition/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Text="Температура:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                        <CheckBox Margin="40 3 3 0" IsChecked="{Binding IsTemperature}"/>
+                                        <TextBlock Grid.Row="0" Text="Температура:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
+                                    </StackPanel>                                    
                                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                         <TextBlock Text="Від " Margin="5 0 5 0"/>
-                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartTemperature, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartTemperature, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTemperature}"/>
                                         <TextBlock Text="До " Margin="5 0 5 0"/>
-                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndTemperature, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndTemperature, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTemperature}"/>
                                     </StackPanel>
                                 </Grid>
                                 <Grid Grid.Row="4">
@@ -115,12 +123,15 @@
                                         <RowDefinition/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Text="Тиск:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                        <CheckBox Margin="40 3 3 0" IsChecked="{Binding IsPress}"/>
+                                        <TextBlock Grid.Row="0" Text="Тиск:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
+                                    </StackPanel>                                    
                                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                         <TextBlock Text="Від " Margin="5 0 5 0"/>
-                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartPressure, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartPressure, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsPress}"/>
                                         <TextBlock Text="До " Margin="5 0 5 0"/>
-                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndPressure, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndPressure, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsPress}"/>
                                     </StackPanel>
                                 </Grid>
                                 <Grid Grid.Row="5">
