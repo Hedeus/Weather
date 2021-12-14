@@ -19,20 +19,39 @@ namespace Weather.Models.Weather
         public int Day { get; set; }
         public sbyte Temperature { get; set; }
         public ushort Pressure { get; set; }
-        public int Precipitation { get; set; }
+        public int PreciInt { get; set; }
+        public PrecipitationBool Precipitation { get; set; }
 
-        public PrecipitationBool PrecipitationToBool()
+        public DayWeather()
+        {
+            Precipitation = new PrecipitationBool();
+        }
+
+        public void PrecipitationToBool()
         {
             PrecipitationBool result = new PrecipitationBool();
-            if ((Precipitation & 1) > 0)
+            if ((PreciInt & 1) > 0)
                 result.WithoutPrecipitation = true;
-            if ((Precipitation & 2) > 0)
+            if ((PreciInt & 2) > 0)
                 result.Rain = true;
-            if ((Precipitation & 4) > 0)
+            if ((PreciInt & 4) > 0)
                 result.Snow = true;
-            if ((Precipitation & 8) > 0)
+            if ((PreciInt & 8) > 0)
                 result.Hail = true;
-            return result;
+            Precipitation = result;
+        }
+        public void PresipitationToInt()
+        {
+            int result = 0;
+            if (Precipitation.WithoutPrecipitation)
+                result |= 1;
+            if (Precipitation.Rain)
+                result |= 2;
+            if (Precipitation.Snow)
+                result |= 4;
+            if (Precipitation.Hail)
+                result |= 8;
+            PreciInt = result;
         }
     }
 

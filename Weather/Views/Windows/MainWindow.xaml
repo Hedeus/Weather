@@ -9,7 +9,7 @@
         xmlns:vm="clr-namespace:Weather.ViewModels"
         xmlns:local="clr-namespace:Weather"        
         Title="{Binding Title}"
-        Height="450" Width="800">
+        Height="460" Width="700">
     <Window.InputBindings>
         <KeyBinding Modifiers="Control" Key="Q" Command="{Binding CloseApplicationCommand}"/>
     </Window.InputBindings>
@@ -43,7 +43,14 @@
             </StatusBarItem>
         </StatusBar>
         <TabControl>
-            <TabItem Header="Погода">                
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Solid_CloudSun" Height="13" Margin="0,0,5,0"
+                                             Foreground="Gray"/>
+                        <TextBlock Text="Погода"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="200"/>
@@ -53,8 +60,8 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="310"/>
                             <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>                    
-                        <GroupBox Grid.Column="0" Header="Пошук" DataContext="{Binding desiredDay}">                        
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Column="0" Header="Пошук" DataContext="{Binding desiredDay}">
                             <Grid Margin="10 0 0 0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="25"/>
@@ -87,14 +94,14 @@
                                         <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartMonth, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDate}"/>
                                         <TextBlock Text="До " Margin="5 0 5 0"/>
                                         <TextBox Width="50" Margin="5 0 5 0" Text="{Binding EndMonth, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDate}"/>
-                                    </StackPanel>                                    
+                                    </StackPanel>
                                 </Grid>
                                 <Grid Grid.Row="2">
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
                                         <RowDefinition/>
-                                    </Grid.RowDefinitions>  
-                                        <TextBlock Grid.Row="0" Text="День:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>                                                                       
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="День:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
                                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                         <TextBlock Text="Від " Margin="5 0 5 0"/>
                                         <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartDay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDate}"/>
@@ -110,7 +117,7 @@
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                         <CheckBox Margin="40 3 3 0" IsChecked="{Binding IsTemperature}"/>
                                         <TextBlock Grid.Row="0" Text="Температура:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
-                                    </StackPanel>                                    
+                                    </StackPanel>
                                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                         <TextBlock Text="Від " Margin="5 0 5 0"/>
                                         <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartTemperature, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTemperature}"/>
@@ -126,7 +133,7 @@
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                         <CheckBox Margin="40 3 3 0" IsChecked="{Binding IsPress}"/>
                                         <TextBlock Grid.Row="0" Text="Тиск:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
-                                    </StackPanel>                                    
+                                    </StackPanel>
                                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                         <TextBlock Text="Від " Margin="5 0 5 0"/>
                                         <TextBox Width="50" Margin="5 0 5 0" Text="{Binding StartPressure, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsPress}"/>
@@ -146,88 +153,108 @@
                                         <CheckBox Content="Сніг" IsChecked="{Binding Precipitation.Snow}"/>
                                         <CheckBox Content="Град" IsChecked="{Binding Precipitation.Hail}"/>
                                     </StackPanel>
-                                </Grid>                        
+                                </Grid>
                             </Grid>
                         </GroupBox>
                         <Button Grid.Row="1" Content="Пошук" Margin="0 10 0 0" Width="60" Command="{Binding SearchCommand}" Height="25" VerticalAlignment="Top"/>
                     </Grid>
                     <GroupBox Grid.Column="1"  Header="Погода 2021">
-                        <DataGrid ItemsSource="{Binding Table}"   
-                                  AutoGenerateColumns="False"
-                                  IsReadOnly="True"
-                                  GridLinesVisibility="Vertical"
-                                  VerticalGridLinesBrush="DarkGray"
-                                  AlternatingRowBackground="LightGray"
-                                  SelectionMode="Single">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Місяць" Binding="{Binding Місяць}"  Width="50"/>
-                                <DataGridTextColumn Header="День" Binding="{Binding День}" Width="50"/>
-                                <DataGridTextColumn Header="Температура" Binding="{Binding Температура}"  Width="90"/>
-                                <DataGridTextColumn Header="Тиск" Binding="{Binding Тиск}"  Width="50"/>
-                                <DataGridTextColumn Header="Опади" Binding="{Binding Опади}" Width="*"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="292"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <DataGrid Grid.Row="0" ItemsSource="{Binding Table}"   
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      GridLinesVisibility="Vertical"
+                                      VerticalGridLinesBrush="DarkGray"
+                                      AlternatingRowBackground="LightGray"
+                                      SelectionMode="Single"
+                                      SelectedIndex="{Binding SelectedRowIndex}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Місяць" Binding="{Binding Місяць}"  Width="50"/>
+                                    <DataGridTextColumn Header="День" Binding="{Binding День}" Width="50"/>
+                                    <DataGridTextColumn Header="Температура" Binding="{Binding Температура}"  Width="90"/>
+                                    <DataGridTextColumn Header="Тиск" Binding="{Binding Тиск}"  Width="50"/>
+                                    <DataGridTextColumn Header="Опади" Binding="{Binding Опади}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <Button Height="25" Margin="5 10 5 0" Command="{Binding AddCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <fa:ImageAwesome Icon="Solid_Plus" Height="13" Margin="3,0,5,0"
+                                             Foreground="ForestGreen"/>
+                                        <TextBlock Text="Додати" Margin="0 0 3 0"/>                                        
+                                    </StackPanel>
+                                </Button>
+                                <Button Height="25" Margin="5 10 5 0" Command="{Binding EditCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <fa:ImageAwesome Icon="Solid_Wrench" Height="13" Margin="3,0,5,0"
+                                             Foreground="Blue"/>
+                                        <TextBlock Text="Редагувати" Margin="0 0 3 0"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Height="25" Margin="50 10 5 0" Command="{Binding RemoveCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <fa:ImageAwesome Icon="Solid_Trash" Height="13" Margin="3,0,5,0"
+                                             Foreground="Red"/>
+                                        <TextBlock Text="Видалити" Margin="0 0 3 0"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
                     </GroupBox>
                 </Grid>
             </TabItem>
             <TabItem>
                 <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <!--<Image Source=""></Image>-->
+                    <StackPanel Orientation="Horizontal">                        
                         <fa:ImageAwesome Icon="Regular_File" Height="13" Margin="0,0,5,0"
-                                         Foreground="Red"/>
-                        <TextBlock Text="Студенты"/>
+                                         Foreground="Gray"/>
+                        <TextBlock Text="{Binding SelectedRowIndex}"/>
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <!--<ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="7*"/>-->
-                        <ColumnDefinition Width="18"/>
-                        <ColumnDefinition Width="232"/>
-                        <ColumnDefinition/>
+                    <Grid.ColumnDefinitions>                                                
+                        <ColumnDefinition Width="207"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Grid.Column="0" Header="Группы" Grid.ColumnSpan="2">
-                        <ListBox ItemsSource="{Binding Groups}" SelectedIndex="0"
-                                 DisplayMemberPath="Name"
-                                 SelectedItem="{Binding SelectedGroup}"/>
-                    </GroupBox>
-                    <GroupBox Grid.Column="2" Header="{Binding SelectedGroup.Name,  FallbackValue='Студенты', TargetNullValue='Группа не выбрана'}">
-                        <DataGrid ItemsSource="{Binding SelectedGroup.Students}"
-                                  AutoGenerateColumns="False"
-                                  CanUserAddRows="False"
-                                  GridLinesVisibility="Vertical"
-                                  VerticalGridLinesBrush="DarkGray"
-                                  AlternatingRowBackground="LightGray">
-                            <!--HorizontalGridLinesBrush="{x:Null}"-->
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}" Width="Auto" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Имя" Binding="{Binding Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Рейтинг" Binding="{Binding Rating}" IsReadOnly="True"/>
-                                <!--<DataGridTextColumn Header="Дата рождения" Binding="{Binding Birthday, StringFormat=dd.MM.yyyy}"/>-->
-                                <DataGridTemplateColumn Header="Дата рождения">
-                                    <!--<DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate DataType="decanat:Student">
-                                            <DatePicker SelectedDate="{Binding Birthday}"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>-->
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate DataType="decanat:Student">
-                                            <TextBlock Text="{Binding Birthday, StringFormat='dd.MM.yyyy'}"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                    <DataGridTemplateColumn.CellEditingTemplate>
-                                        <DataTemplate DataType="decanat:Student">
-                                            <DatePicker SelectedDate="{Binding Birthday}"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellEditingTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Заметки" Binding="{Binding Description}" Width="*"/>
-                                <!--<DataGridTextColumn Header="Группа" Binding="{Binding DataContext.SelectedGroup.Name, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>-->
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </GroupBox>
+                    <Grid Grid.Column="0" Grid.ColumnSpan="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>                        
+                        <TextBlock Grid.Row="0" Text="Введіть дані! Поля з зірочкою обов'зкові до заповнення."/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="85"/>
+                                <ColumnDefinition Width="75"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Місяць*" Margin="5 5 0 0"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedDay.Month}" Width="50" Margin="5 3 5 3"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="День*" Margin="5 5 0 0"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedDay.Day}" Width="50" Margin="5 3 5 3"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Температура" Margin="5 5 0 0"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedDay.Temperature}" Width="50" Margin="5 3 5 3"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Тиск" Margin="5 5 0 0"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SelectedDay.Pressure}" Width="50" Margin="5 3 5 3"/>                            
+                        </Grid> 
+                    </Grid>
+                    <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 25 0 0">
+                        <TextBlock Text="Опади:" FontWeight="Bold" Margin="10 3 3 3"/>
+                        <CheckBox Content="Без опадів" IsChecked="{Binding SelectedDay.Precipitation.WithoutPrecipitation}" Margin="3 3 3 3"/>
+                        <CheckBox Content="Дощ" IsChecked="{Binding SelectedDay.Precipitation.Rain}" Margin="3 3 3 3"/>
+                        <CheckBox Content="Сніг" IsChecked="{Binding SelectedDay.Precipitation.Snow}" Margin="3 3 3 3"/>
+                        <CheckBox Content="Град" IsChecked="{Binding SelectedDay.Precipitation.Hail}" Margin="3 3 3 3"/>
+                    </StackPanel>
                 </Grid>
             </TabItem>
         </TabControl>

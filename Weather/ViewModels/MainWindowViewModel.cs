@@ -24,11 +24,11 @@ namespace Weather.ViewModels
 
         private Group _SelectedGroup;
         /// </summary>Выбранная группа
-        public Group SelectedGroup 
-            { 
-                get => _SelectedGroup;
-                set => Set(ref _SelectedGroup, value);
-            }
+        public Group SelectedGroup
+        {
+            get => _SelectedGroup;
+            set => Set(ref _SelectedGroup, value);
+        }
         #endregion
 
         #region Заголовок окна
@@ -58,7 +58,7 @@ namespace Weather.ViewModels
         private string _Status = "Готов!";
 
         /// <summary>Статус программы</summary>
-        public string Status 
+        public string Status
         {
             get => _Status;
             set => Set(ref _Status, value);
@@ -88,6 +88,16 @@ namespace Weather.ViewModels
         }
 
         /// <summary>
+        /// Обраний рядок в таблиці
+        /// </summury>
+        private int _SelectedRowIndex;
+        public int SelectedRowIndex
+        {
+            get => _SelectedRowIndex;
+            set => Set(ref _SelectedRowIndex, value);
+        }
+
+        /// <summary>
         /// Обраний день в таблиці
         /// </summary>
         private DayWeather _SelectedDay;
@@ -112,6 +122,8 @@ namespace Weather.ViewModels
         /*------------------------------------------------------------------------------------*/
 
         #region Методы
+
+        #region Пошук у базі       
 
         internal void WeatherSearch()
         {
@@ -309,6 +321,13 @@ namespace Weather.ViewModels
 
         #endregion
 
+        #region Редагування рядка
+
+
+        #endregion
+
+        #endregion
+
         /*------------------------------------------------------------------------------------*/
 
         #region Команды
@@ -337,6 +356,44 @@ namespace Weather.ViewModels
 
         #endregion
 
+        #region Редагування
+        public ICommand EditCommand { get; }
+
+        private bool CanEditCommandExecute(object p) => SelectedRowIndex > 0;
+
+        private void OnEditCommandExecuted(object p)
+        {
+            WeatherSearch();
+        }
+
+        #endregion
+
+        #region Видалення
+        public ICommand RemoveCommand { get; }
+
+        private bool CanRemoveCommandExecute(object p) => SelectedRowIndex > 0;
+
+        private void OnRemoveCommandExecuted(object p)
+        {
+            WeatherSearch();
+        }
+
+        #endregion
+
+        #region Створення нового запису
+        public ICommand AddCommand { get; }
+
+        private bool CanAddCommandExecute(object p) => true;
+
+        private void OnAddCommandExecuted(object p)
+        {
+            WeatherSearch();
+        }
+
+        #endregion
+
+
+
         #endregion
 
         /*------------------------------------------------------------------------------------*/
@@ -348,6 +405,9 @@ namespace Weather.ViewModels
             CloseApplicationCommand = new LambdaCommand(OnCloseApplicationCommandExecuted, CanCloseApplicationCommandExecute);
 
             SearchCommand = new LambdaCommand(OnSearchCommandExecuted, CanSearchCommandExecute);
+            AddCommand = new LambdaCommand(OnAddCommandExecuted, CanAddCommandExecute);
+            EditCommand = new LambdaCommand(OnEditCommandExecuted, CanEditCommandExecute);
+            RemoveCommand = new LambdaCommand(OnRemoveCommandExecuted, CanRemoveCommandExecute);
 
             #endregion
 
@@ -368,19 +428,7 @@ namespace Weather.ViewModels
                 Students = new ObservableCollection<Student>(students)
             });
             Groups = new ObservableCollection<Group>(groups);
-
-            //WorkWithDataBase.OpenConnection("server=localhost;uid=root;pwd=1h9e8d7;database=weather;");
-            //// string response = WorkWithDataBase.ExecuteQuery("SELECT temperature FROM weather2021 WHERE date='2021-01-13';");
-            ////TextWeather = response;
-            ////string sql = "SELECT temperature FROM weather2021 WHERE date='2021-01-13';";
-            ////string sql = "SELECT * FROM weather2021;";            
-            //string sql = "SELECT day(t.date) as `День`," +
-            //             "month(t.date) as `Місяць`," +
-            //             "temperature as `Температура`," +
-            //             "pressure as `Тиск`," +
-            //             "precipitation as `Опади`" +
-            //             "from weather2021 t;";
-            //Table = WorkWithDataBase.ExecuteQuery(sql);
+                       
 
             desiredDay = new DesiredDay();
             desiredDay.StartDay = 20;
@@ -392,6 +440,8 @@ namespace Weather.ViewModels
             //desiredDay.EndDay = 0;
             //desiredDay.EndMonth = 0;
             //Table = new DataTable();
+
+            SelectedDay = new DayWeather();
 
             WorkWithDataBase.OpenConnection("server=localhost;uid=root;pwd=1h9e8d7;database=weather;");
 
