@@ -66,6 +66,18 @@ namespace Weather.ViewModels
 
         #endregion
 
+        #region Текст помилки
+
+        private string _ErrorText = "";
+
+        public string ErrorText
+        {
+            get => _ErrorText;
+            set => Set(ref _ErrorText, value);
+        }
+
+        #endregion
+
         #region Weather
 
         private string _TextWeather = "Не відомо";
@@ -352,12 +364,14 @@ namespace Weather.ViewModels
 
         #endregion
 
+
         #region Перехід до Редагування рядка
 
         public void RowEditButtonClick()
         {
             ActiveTab = 1;
             IsEditing = true;
+            IsAdding = false;
             DayWeather selday = new DayWeather();
             DataRow row = Table.NewRow();
             row = Table.Rows[SelectedRowIndex];            
@@ -378,20 +392,95 @@ namespace Weather.ViewModels
         internal void SaveChanges()
         {
             SelectedDay.PresipitationToInt();
-            string updateStr = "UPDATE weather2021 " +
-                "SET temperature = '" + SelectedDay.Temperature.ToString() + "', " +
-                "pressure = '" + SelectedDay.Pressure.ToString() + "', " +
-                "precipitation = '" + SelectedDay.PreciInt.ToString() + "' " +
-                "WHERE date = ";
-            string dateStr = SelectedDay.Month.ToString() + "," +
-                SelectedDay.Day.ToString() + ",2021";
-            updateStr += "STR_TO_DATE( '" + dateStr + "', '%m,%d,%Y' );";
-            WorkWithDataBase.ExecuteQueryWithoutResponse(updateStr);
+            bool IsError = false;
+            string command = "";
+            int year = 2021;
+            if (!IsAdding)
+            {
+                command = "UPDATE weather2021 " +
+                    "SET temperature = '" + SelectedDay.Temperature.ToString() + "', " +
+                    "pressure = '" + SelectedDay.Pressure.ToString() + "', " +
+                    "precipitation = '" + SelectedDay.PreciInt.ToString() + "' " +
+                    "WHERE date = ";
+                string dateStr = SelectedDay.Month.ToString() + "," +
+                    SelectedDay.Day.ToString() + "," + year.ToString();
+                command += "STR_TO_DATE( '" + dateStr + "', '%m,%d,%Y' );";                
+            }
+            else
+            {
+                if ((SelectedDay.Month > 0) && (SelectedDay.Month <= 12))
+                {
+                    if ((SelectedDay.Day > 0) && (SelectedDay.Day <= DateTime.DaysInMonth(year, SelectedDay.Month)))
+                    {
+                        string dateStr = SelectedDay.Month.ToString() + "," +
+                            SelectedDay.Day.ToString() + "," + year.ToString();
+                        command = "SELECT * FROM weather2021 WHERE date = STR_TO_DATE('" + dateStr + "', '%m,%d,%Y'); ";
+                        DataTable table = new DataTable();
+                        table = WorkWithDataBase.ExecuteQuery(command);
+
+
+                        if (!(table == null))
+                        {
+                            IsError = true;
+                            ErrorText = "Запис з в казаною датою вже існує!";                            
+                        }
+                        SelectedDay.PresipitationToInt();
+                        command = "INSERT INTO `weather`.`weather2021` (`date`, `temperature`, `precipitation`, `pressure`)" +
+                                  "VALUES (STR_TO_DATE('" + dateStr + "', '%m,%d,%Y'), '" + 
+                                  SelectedDay.Temperature.ToString() + "', '" +
+                                  SelectedDay.PreciInt.ToString() + "', '" +
+                                  SelectedDay.Pressure.ToString() + "');";
+                    }
+                    else
+                    {
+                        IsError = true;
+                        ErrorText = "Номер дня має бути " +
+                            " від 1 до " + DateTime.DaysInMonth(year, SelectedDay.Month).ToString() + "!";
+                    }
+                }
+                else
+                {
+                    IsError = true;
+                    ErrorText = "Номер місяця має бути від 1 до 12!";
+                }
+            }
+            if (IsError)
+                return;
+            WorkWithDataBase.ExecuteQueryWithoutResponse(command);
             ActiveTab = 0;
             IsEditing = false;
+            IsAdding = false;
+            Status = "Очікування!";
+            ErrorText = "";
         }
 
         #endregion
+
+        #region Додавання рядка
+
+        internal void RowAddButtonClick()
+        {
+            ActiveTab = 1;
+            IsEditing = true;
+            IsAdding = true;
+            DayWeather selday = new DayWeather();
+
+            selday.Month = 1;
+            selday.Day = 1;
+            selday.Temperature = 0;
+            selday.Pressure = 0;
+            selday.PreciInt = 0;
+            selday.PrecipitationToBool();
+            SelectedDay = selday;
+
+            Status = "Додавання запису!";
+
+            return;
+        }
+
+        #endregion
+
+
 
         #endregion
 
@@ -454,7 +543,7 @@ namespace Weather.ViewModels
 
         private void OnAddCommandExecuted(object p)
         {
-            WeatherSearch();
+            RowAddButtonClick();
         }
 
         #endregion

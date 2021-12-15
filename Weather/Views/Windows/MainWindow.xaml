@@ -263,6 +263,12 @@
                         <CheckBox Content="Сніг" IsChecked="{Binding SelectedDay.Precipitation.Snow}" Margin="3 3 3 3"/>
                         <CheckBox Content="Град" IsChecked="{Binding SelectedDay.Precipitation.Hail}" Margin="3 3 3 3"/>
                     </StackPanel>
+                    <TextBlock Grid.Column="2"
+                               Width="200" Height="50" Margin="5"
+                               VerticalAlignment="Top" HorizontalAlignment="Left"
+                               TextWrapping="Wrap"
+                               FontWeight="Bold" Foreground="Red"
+                               Text="{Binding ErrorText}"/>
                 </Grid>
             </TabItem>
         </TabControl>
