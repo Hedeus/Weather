@@ -550,7 +550,7 @@ namespace Weather.ViewModels
 
         #endregion
 
-        #region Створення нового запису
+        #region Збереження змін у рядку
         public ICommand ApplyCommand { get; }
 
         private bool CanApplyCommandExecute(object p) => true;

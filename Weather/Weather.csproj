@@ -86,6 +86,7 @@
     <Compile Include="Infrastructure\Commands\Base\Command.cs" />
     <Compile Include="Infrastructure\Commands\Base\LambdaCommand.cs" />
     <Compile Include="Infrastructure\Commands\CloseApplicationCommand.cs" />
+    <Compile Include="ViewModels\WelcomeWindowModel.cs" />
     <Compile Include="Views\Windows\LogInWindow.xaml.cs">
       <DependentUpon>LogInWindow.xaml</DependentUpon>
     </Compile>
