@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{56C48D6A-D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "Test\TestConsole\TestConsole.csproj", "{A106BD63-A729-4007-AA35-46F4A0297580}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFAppTest", "Test\WPFAppTest\WPFAppTest.csproj", "{FC134938-4234-422A-AF02-C8F435FB856D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +25,17 @@ Global
 		{A106BD63-A729-4007-AA35-46F4A0297580}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A106BD63-A729-4007-AA35-46F4A0297580}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A106BD63-A729-4007-AA35-46F4A0297580}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC134938-4234-422A-AF02-C8F435FB856D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC134938-4234-422A-AF02-C8F435FB856D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC134938-4234-422A-AF02-C8F435FB856D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC134938-4234-422A-AF02-C8F435FB856D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A106BD63-A729-4007-AA35-46F4A0297580} = {56C48D6A-D991-4C70-964E-9C29568CD193}
+		{FC134938-4234-422A-AF02-C8F435FB856D} = {56C48D6A-D991-4C70-964E-9C29568CD193}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {40476106-726B-4AA7-B5FC-F861874C9B5C}

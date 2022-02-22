@@ -1,0 +1,13 @@
+﻿<Application x:Class="WPFAppTest.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WPFAppTest"
+             xmlns:viewmodel="clr-namespace:WPFAppTest.ViewModels" 
+             xmlns:view="clr-namespace:WPFAppTest.Views"
+             StartupUri="Views/Windows/MainWindow.xaml">
+    <Application.Resources>
+        <DataTemplate DataType="{x:Type viewmodel:DemoViewModel}">
+            <view:DemoView HorizontalAlignment="Stretch" />
+        </DataTemplate>         
+    </Application.Resources>
+</Application>

@@ -9,7 +9,7 @@
         xmlns:vm="clr-namespace:Weather.ViewModels"
         xmlns:local="clr-namespace:Weather"        
         Title="{Binding Title}"
-        Height="460" Width="700">
+        MinHeight="530" MinWidth="700" Width="700" Height="530">
     <Window.InputBindings>
         <KeyBinding Modifiers="Control" Key="Q" Command="{Binding CloseApplicationCommand}"/>
     </Window.InputBindings>
@@ -20,8 +20,8 @@
         <cmd:CloseApplicationCommand x:Key="CloseApplicationCommand"/>
     </Window.Resources>
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Файл">
+        <Menu DockPanel.Dock="Top" Height="30">
+            <MenuItem Header="Файл" Height="30">
                 <!--<MenuItem Header="Выход" Command="{Binding CloseApplicationCommand}"/>-->
                 <MenuItem Header="Выход" Command="{StaticResource CloseApplicationCommand}"/>
                 <!--<MenuItem Header="Выход">
@@ -30,7 +30,7 @@
                     </MenuItem.Command>
                 </MenuItem>-->
             </MenuItem>
-            <MenuItem Header="Помощь">
+            <MenuItem Header="Помощь" Height="30">
                 <MenuItem Header="О программе"/>
             </MenuItem>
         </Menu>
@@ -58,25 +58,25 @@
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="310"/>
+                            <RowDefinition Height="370"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <GroupBox Grid.Column="0" Header="Пошук" DataContext="{Binding desiredDay}">
+                        <GroupBox Grid.Column="0" Header="Пошук" DataContext="{Binding desiredDay}" Margin="1">
                             <Grid Margin="10 0 0 0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="25"/>
-                                    <RowDefinition Height="60"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="65"/>
+                                    <RowDefinition Height="45"/>
+                                    <RowDefinition Height="45"/>
+                                    <RowDefinition Height="45"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                    <TextBlock Text="Рік:"/>
+                                    <TextBlock Text="Рік:" Margin="3"/>
                                     <ComboBox SelectedIndex="0" VerticalAlignment="Top" Margin="5 0 5 0" IsEnabled="False">
-                                        <TextBlock>2021</TextBlock>
+                                        <TextBlock Text="2021"/>
                                     </ComboBox>
-                                    <TextBlock Text="(Відключено)" Foreground="DarkGray"/>
+                                    <TextBlock Text="(Відключено)" Foreground="DarkGray" Margin="5 3 0 0"/>
                                 </StackPanel>
                                 <Grid Grid.Row="1">
                                     <Grid.RowDefinitions>
@@ -84,7 +84,7 @@
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
                                     <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center">
-                                        <CheckBox Margin="40 3 3 0" IsChecked="{Binding IsDate}">
+                                        <CheckBox Margin="20 3 3 0" IsChecked="{Binding IsDate}">
                                             <TextBlock Text="Часовий проміжок" FontWeight="Bold"/>
                                         </CheckBox>
                                         <TextBlock Grid.Row="0" Text="Місяць:" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 2 0 0"/>
@@ -156,14 +156,14 @@
                                 </Grid>
                             </Grid>
                         </GroupBox>
-                        <Button Grid.Row="1" Content="Пошук" Margin="0 10 0 0" Width="60" Command="{Binding SearchCommand}" Height="25" VerticalAlignment="Top"/>
+                        <Button Grid.Row="1" Content="Пошук" Margin="0 10 0 0" Width="100" Command="{Binding SearchCommand}" Height="25" VerticalAlignment="Top"/>
                     </Grid>
-                    <GroupBox Grid.Column="1"  Header="Погода 2021">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="292"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>                            
+                    <Grid Grid.Column="1"  >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="370"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Header="Погода 2021" Margin="1">     
                             <DataGrid Grid.Row="0" ItemsSource="{Binding Table}"   
                                       AutoGenerateColumns="False"
                                       IsReadOnly="True"
@@ -171,31 +171,33 @@
                                       VerticalGridLinesBrush="DarkGray"
                                       AlternatingRowBackground="LightGray"
                                       SelectionMode="Single"
-                                      SelectedIndex="{Binding SelectedRowIndex}">                                
+                                      SelectedIndex="{Binding SelectedRowIndex}" Grid.ColumnSpan="2">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Місяць" Binding="{Binding Місяць}"  Width="50"/>
-                                    <DataGridTextColumn Header="День" Binding="{Binding День}" Width="50"/>
-                                    <DataGridTextColumn Header="Температура" Binding="{Binding Температура}"  Width="90"/>
-                                    <DataGridTextColumn Header="Тиск" Binding="{Binding Тиск}"  Width="50"/>
+                                    <DataGridTextColumn Header="Місяць" Binding="{Binding Місяць}"  Width="Auto"/>
+                                    <DataGridTextColumn Header="День" Binding="{Binding День}" Width="Auto"/>
+                                    <DataGridTextColumn Header="Температура" Binding="{Binding Температура}"  Width="Auto"/>
+                                    <DataGridTextColumn Header="Тиск" Binding="{Binding Тиск}"  Width="Auto"/>
                                     <DataGridTextColumn Header="Опади" Binding="{Binding Опади}" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-                                <Button Height="25" Margin="5 10 5 0" Command="{Binding AddCommand}">
+                           
+                        </GroupBox>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 10 0 0" Grid.ColumnSpan="2">
+                                <Button Height="25" Margin="5 0 5 0" Command="{Binding AddCommand}">
                                     <StackPanel Orientation="Horizontal">
                                         <fa:ImageAwesome Icon="Solid_Plus" Height="13" Margin="3,0,5,0"
                                              Foreground="ForestGreen"/>
-                                        <TextBlock Text="Додати" Margin="0 0 3 0"/>                                        
+                                        <TextBlock Text="Додати" Margin="0 0 3 0"/>
                                     </StackPanel>
                                 </Button>
-                                <Button Height="25" Margin="5 10 5 0" Command="{Binding EditCommand}">
+                                <Button Height="25" Margin="5 0 5 0" Command="{Binding EditCommand}">
                                     <StackPanel Orientation="Horizontal">
                                         <fa:ImageAwesome Icon="Solid_Wrench" Height="13" Margin="3,0,5,0"
                                              Foreground="Blue"/>
                                         <TextBlock Text="Редагувати" Margin="0 0 3 0"/>
                                     </StackPanel>
                                 </Button>
-                                <Button Height="25" Margin="50 10 5 0" Command="{Binding RemoveCommand}">
+                                <Button Height="25" Margin="50 0 5 0" Command="{Binding RemoveCommand}">
                                     <StackPanel Orientation="Horizontal">
                                         <fa:ImageAwesome Icon="Solid_Trash" Height="13" Margin="3,0,5,0"
                                              Foreground="Red"/>
@@ -203,20 +205,19 @@
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
-                        </Grid>
-                    </GroupBox>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem IsEnabled="{Binding IsEditing}">
                 <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">                        
+                    <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Regular_File" Height="13" Margin="0,0,5,0"
                                          Foreground="Gray"/>
                         <TextBlock Text="{Binding SelectedDay.Month}"/>
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
-                    <Grid.ColumnDefinitions>                                                
+                    <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="180"/>
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
@@ -225,7 +226,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="35"/>
                             <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>                        
+                        </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="Введіть дані! Поля з зірочкою обов'зкові до заповнення." TextWrapping="Wrap" Width=" 180" HorizontalAlignment="Left"/>
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
@@ -246,8 +247,8 @@
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Температура" Margin="5 5 0 0"/>
                             <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedDay.Temperature, UpdateSourceTrigger=PropertyChanged}" Width="50" Margin="5 3 5 3"/>
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="Тиск" Margin="5 5 0 0"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SelectedDay.Pressure, UpdateSourceTrigger=PropertyChanged}" Width="50" Margin="5 3 5 3"/>                            
-                        </Grid> 
+                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding SelectedDay.Pressure, UpdateSourceTrigger=PropertyChanged}" Width="50" Margin="5 3 5 3"/>
+                        </Grid>
                     </Grid>
                     <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 0 0">
                         <Button Height="25" Margin="3 3 5 0" Command="{Binding ApplyCommand}">

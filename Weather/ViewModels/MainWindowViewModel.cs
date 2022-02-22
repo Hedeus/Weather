@@ -383,6 +383,7 @@ namespace Weather.ViewModels
             selday.PrecipitationToBool();
             SelectedDay = selday;
             Status = "Редагування";
+            ErrorText = "";
         }
 
         #endregion
@@ -390,7 +391,7 @@ namespace Weather.ViewModels
         #region Внесення змін у рядок
 
         internal void SaveChanges()
-        {
+        {            
             SelectedDay.PresipitationToInt();
             bool IsError = false;
             string command = "";
@@ -465,6 +466,7 @@ namespace Weather.ViewModels
             IsAdding = true;
             DayWeather selday = new DayWeather();
 
+            ErrorText = "";
             selday.Month = 1;
             selday.Day = 1;
             selday.Temperature = 0;
