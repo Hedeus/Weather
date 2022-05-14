@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Threading;
 
 namespace TestConsole
 {
@@ -8,39 +9,48 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            
+            //Student student = new Student();
+            //student.Moving += (s) => Console.WriteLine(s);
+            //student.Move(7);
 
-            DB db = new DB();
-            DataTable table = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
+            Action<string> Moving = null;
+            Moving = (s) => Console.WriteLine(s);
+            Action<int> Move = (distance) =>
+            {
+                for (int i = 1; i <= distance; i++)
+                {
+                    Thread.Sleep(1000);
+                    if (Moving != null)
+                        Moving(string.Format("Идет перемещение... пройдено километров: {0}", i));
+                }
+            };
+            Move(4);
+            //Console.ReadLine();
+            #region Работа с БД
+            //DB db = new DB();
+            //DataTable table = new DataTable();
+            //MySqlDataAdapter adapter = new MySqlDataAdapter();
+            //MySqlCommand command = new MySqlCommand("SELECT * FROM weather2021", db.getConnection());
+            ////command.Parameters.Add("@d", MySqlDbType.Date).Value = "2021-08-01";
 
-            //string sql = "SELECT temperature FROM weather.weather2021 WHERE date='2021-08-01';";
-            //db.openConnection();
+            //adapter.SelectCommand = command;
+            //adapter.Fill(table);
 
-            //MySqlCommand command = new MySqlCommand("SELECT `temperature` FROM weather.weather2021 WHERE `date`=@d", db.getConnection());
-            MySqlCommand command = new MySqlCommand("SELECT * FROM weather2021", db.getConnection());
-           //command.Parameters.Add("@d", MySqlDbType.Date).Value = "2021-08-01";
+            //string result = table.Rows[1]["temperature"].ToString();
 
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
+            //Console.WriteLine(result);
 
-            string result = table.Rows[1]["temperature"].ToString();
+            ////conn.Close();
+            ////WorkWithDataBase.CloseConnection();
 
-            //foreach(DataRow row in table.Rows)
-            //{
-            //    foreach(DataColumn column in table.Columns)
-            //    {
-            //        Console.WriteLine(row[column]);
-            //    }
-            //}     
+            ////db.closeConnection();
+            //Console.ReadLine(); 
+            #endregion
+        }
 
-            Console.WriteLine(result);
-
-            //conn.Close();
-            //WorkWithDataBase.CloseConnection();
-
-            //db.closeConnection();
-            Console.ReadLine();
+        static void student_Moving(string message)
+        {
+            Console.WriteLine(message);
         }
     }
 }

@@ -10,6 +10,7 @@ using Weather.Data;
 using System.Data;
 using Weather.Models.Weather;
 
+
 namespace Weather.ViewModels
 {
     internal class MainWindowViewModel : ViewModel
@@ -32,7 +33,7 @@ namespace Weather.ViewModels
         #endregion
 
         #region Заголовок окна
-        private string _Title = "Курсовая работа по C#";
+        private string _Title = "Weather";
 
         /// <summary>Заголовок окна</summary>
 
@@ -369,10 +370,11 @@ namespace Weather.ViewModels
 
         public void RowEditButtonClick()
         {
+            if (Table == null) return;
             ActiveTab = 1;
             IsEditing = true;
             IsAdding = false;
-            DayWeather selday = new DayWeather();
+            DayWeather selday = new DayWeather();            
             DataRow row = Table.NewRow();
             row = Table.Rows[SelectedRowIndex];            
             selday.Month = Convert.ToInt32(row["Місяць"]);
@@ -482,7 +484,35 @@ namespace Weather.ViewModels
 
         #endregion
 
+        internal bool RowRemoveButtonClick()
+        {
+            if (Table == null) return false;
+            //DialogResultConverter result;
+            bool result = MessageBox.Show("Ви впевнені, що хочете видалити рядок: ?",
+                                        "Видалення рядка", MessageBoxButton.YesNo,
+                                         MessageBoxImage.Question) == MessageBoxResult.Yes;
+            if (result)
+            {
+                DayWeather selday = new DayWeather();
+                DataRow row = Table.NewRow();
+                row = Table.Rows[SelectedRowIndex];
+                selday.Month = Convert.ToInt32(row["Місяць"]);
+                selday.Day = Convert.ToInt32(row["День"]);                
+                Status = "Видалення";
+                ErrorText = "";
+                int year = 2021;
+                string dateStr = selday.Month.ToString() + "," +
+                            selday.Day.ToString() + "," + year.ToString();
+                string command = "DELETE FROM weather2021 WHERE date = STR_TO_DATE('" + dateStr + "', '%m,%d,%Y'); ";
+                WorkWithDataBase.ExecuteQueryWithoutResponse(command);
 
+                Status = "Рядок " + dateStr + " видалено!";
+                return true;
+            }
+            else
+                Status = "Виділення рядка відмінено.";
+            return false;
+        }
 
         #endregion
 
@@ -533,7 +563,10 @@ namespace Weather.ViewModels
 
         private void OnRemoveCommandExecuted(object p)
         {
-            WeatherSearch();
+            if (RowRemoveButtonClick())
+            {
+                WeatherSearch();
+            }
         }
 
         #endregion
