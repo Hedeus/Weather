@@ -36,6 +36,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Weather.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="FontAwesome5, Version=2.1.4.0, Culture=neutral, PublicKeyToken=9cfaf01297a008f8, processorArchitecture=MSIL">
       <HintPath>..\packages\FontAwesome5.2.1.4\lib\net472\FontAwesome5.dll</HintPath>
@@ -225,6 +228,7 @@
     <Compile Include="Infrastructure\Commands\Base\Command.cs" />
     <Compile Include="Infrastructure\Commands\Base\LambdaCommand.cs" />
     <Compile Include="Infrastructure\Commands\CloseApplicationCommand.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="ViewModels\WelcomeWindowModel.cs" />
     <Compile Include="Views\Windows\LogInWindow.xaml.cs">
       <DependentUpon>LogInWindow.xaml</DependentUpon>
