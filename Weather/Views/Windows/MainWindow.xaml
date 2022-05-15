@@ -8,14 +8,15 @@
         xmlns:decanat="clr-namespace:Weather.Models.Decanat"
         xmlns:vm="clr-namespace:Weather.ViewModels"
         xmlns:local="clr-namespace:Weather"        
-        Title="{Binding Title}"
+        Title="{Binding Title}"        
+        DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
         MinHeight="530" MinWidth="700" Width="700" Height="530">
     <Window.InputBindings>
         <KeyBinding Modifiers="Control" Key="Q" Command="{Binding CloseApplicationCommand}"/>
     </Window.InputBindings>
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <vm:MainWindowViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
     <Window.Resources>
         <cmd:CloseApplicationCommand x:Key="CloseApplicationCommand"/>
     </Window.Resources>

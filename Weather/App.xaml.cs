@@ -44,12 +44,8 @@ namespace Weather
 
         internal static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
         {
-            //throw new NotImplementedException();
-            //services.AddSingleton<DataService>();
-            //services.AddSingleton<CountriesStatisticViewModel>();
-            services.AddSingleton<WelcomeWindowModel>();
-
-            //App.Host.Services.GetRequiredService<>
+            services.AddSingleton<MainWindowViewModel>();
+            services.AddSingleton<WelcomeWindowModel>();            
         }
 
         public static string CurrentDirectory => IsDesignMode

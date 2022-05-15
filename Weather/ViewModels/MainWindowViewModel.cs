@@ -9,10 +9,11 @@ using System.Linq;
 using Weather.Data;
 using System.Data;
 using Weather.Models.Weather;
-
+using System.Windows.Markup;
 
 namespace Weather.ViewModels
 {
+    [MarkupExtensionReturnType(typeof(MainWindowViewModel))]
     internal class MainWindowViewModel : ViewModel
     {
         /*------------------------------------------------------------------------------------*/

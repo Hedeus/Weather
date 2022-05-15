@@ -229,6 +229,7 @@
     <Compile Include="Infrastructure\Commands\Base\LambdaCommand.cs" />
     <Compile Include="Infrastructure\Commands\CloseApplicationCommand.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\WelcomeWindowModel.cs" />
     <Compile Include="Views\Windows\LogInWindow.xaml.cs">
       <DependentUpon>LogInWindow.xaml</DependentUpon>
